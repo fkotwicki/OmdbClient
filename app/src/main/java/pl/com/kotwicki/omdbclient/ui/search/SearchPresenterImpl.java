@@ -11,7 +11,7 @@ import rx.Subscription;
  */
 class SearchPresenterImpl implements SearchPresenter {
 
-    private final SearchView searchView;
+    private SearchView searchView;
 
     private Subscription searchSubscription;
 
@@ -29,6 +29,7 @@ class SearchPresenterImpl implements SearchPresenter {
     @Override
     public void onStop() {
         unsubscribe();
+        searchView = null;
     }
 
     private void unsubscribe() {
