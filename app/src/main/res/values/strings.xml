@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">OmdbClient</string>
+    <string name="find_a_movie">Find a movie!</string>
+    <string name="enter_a_movie_title">Enter a movie title</string>
+    <string name="search">Search</string>
+    <string name="movie_not_found">Movie not found</string>
 </resources>
