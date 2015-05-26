@@ -13,4 +13,6 @@ public interface SearchComponent {
 
     void inject(SearchFragment searchFragment);
 
+    void inject(SearchActivity searchActivity);
+
 }

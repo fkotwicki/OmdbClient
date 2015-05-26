@@ -3,6 +3,7 @@ package pl.com.kotwicki.omdbclient.ui.search;
 import pl.com.kotwicki.omdbclient.model.SearchMovieUseCase;
 import pl.com.kotwicki.omdbclient.rest.MoviesService;
 import pl.com.kotwicki.omdbclient.rest.model.MovieSearchResult;
+import pl.com.kotwicki.omdbclient.ui.LceView;
 import rx.Subscriber;
 import rx.Subscription;
 
@@ -11,28 +12,29 @@ import rx.Subscription;
  */
 class SearchPresenterImpl implements SearchPresenter {
 
-    private final SearchView searchView;
+    private LceView<MovieSearchResult> searchView;
 
     private Subscription searchSubscription;
 
-    SearchPresenterImpl(SearchView searchView) {
+    SearchPresenterImpl(LceView<MovieSearchResult> searchView) {
         this.searchView = searchView;
     }
 
     @Override
     public void findMovie(MoviesService moviesService, String title) {
         unsubscribe();
-        searchView.showProgress();
+        searchView.showLoading();
         searchSubscription = new SearchMovieUseCase(moviesService, title).execute(createSearchSubscriber());
     }
 
     @Override
     public void onStop() {
         unsubscribe();
+        searchView = null;
     }
 
     private void unsubscribe() {
-        if(searchSubscription != null && !searchSubscription.isUnsubscribed()) {
+        if (searchSubscription != null && !searchSubscription.isUnsubscribed()) {
             searchSubscription.unsubscribe();
             searchSubscription = null;
         }
@@ -42,18 +44,18 @@ class SearchPresenterImpl implements SearchPresenter {
         return new Subscriber<MovieSearchResult>() {
             @Override
             public void onCompleted() {
-                searchView.hideProgress();
+                searchView.hideLoading();
             }
 
             @Override
             public void onError(Throwable e) {
-                searchView.hideProgress();
+                searchView.hideLoading();
                 searchView.showError(e);
             }
 
             @Override
             public void onNext(MovieSearchResult movieSearchResult) {
-                searchView.showSearchResult(movieSearchResult);
+                searchView.showContent(movieSearchResult);
             }
         };
     }

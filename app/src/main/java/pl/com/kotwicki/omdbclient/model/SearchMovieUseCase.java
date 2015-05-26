@@ -1,9 +1,15 @@
 package pl.com.kotwicki.omdbclient.model;
 
+import java.util.Collections;
+import java.util.Comparator;
+
 import pl.com.kotwicki.omdbclient.rest.MoviesService;
+import pl.com.kotwicki.omdbclient.rest.model.MovieSearchResult;
+import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -22,7 +28,20 @@ public class SearchMovieUseCase implements UseCase {
 
     @Override
     public Subscription execute(Subscriber subscriber) {
-        return moviesService.findMovie(searchTitle).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.newThread()).subscribe(subscriber);
+        return moviesService.findMovie(searchTitle).
+                flatMap(new Func1<MovieSearchResult, Observable<?>>() {
+                    @Override
+                    public Observable<?> call(MovieSearchResult movieSearchResult) {
+                        Collections.sort(movieSearchResult.entries, new Comparator<MovieSearchResult.Entry>() {
+                            @Override
+                            public int compare(MovieSearchResult.Entry lhs, MovieSearchResult.Entry rhs) {
+                                return rhs.year.compareTo(lhs.year);
+                            }
+                        });
+                        return Observable.just(movieSearchResult);
+                    }
+                }).
+                observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.newThread()).subscribe(subscriber);
     }
 
 }
