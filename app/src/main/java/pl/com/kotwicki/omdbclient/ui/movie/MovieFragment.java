@@ -54,6 +54,12 @@ public class MovieFragment extends BaseFragment implements LceView<MovieDetails>
     }
 
     @Override
+    public void onDestroy() {
+        movieDetailsPresenter.onStop();
+        super.onDestroy();
+    }
+
+    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         final Bundle args = getArguments();

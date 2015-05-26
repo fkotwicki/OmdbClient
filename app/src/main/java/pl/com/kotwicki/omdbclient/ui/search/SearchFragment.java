@@ -54,7 +54,6 @@ public class SearchFragment extends BaseFragment implements SearchForm.Listener,
     @Override
     public void onDestroy() {
         presenter.onStop();
-        presenter = null;
         super.onDestroy();
     }
 
