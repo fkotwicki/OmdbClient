@@ -32,12 +32,14 @@ public class SearchMovieUseCase implements UseCase {
                 flatMap(new Func1<MovieSearchResult, Observable<?>>() {
                     @Override
                     public Observable<?> call(MovieSearchResult movieSearchResult) {
-                        Collections.sort(movieSearchResult.entries, new Comparator<MovieSearchResult.Entry>() {
-                            @Override
-                            public int compare(MovieSearchResult.Entry lhs, MovieSearchResult.Entry rhs) {
-                                return rhs.year.compareTo(lhs.year);
-                            }
-                        });
+                        if(!movieSearchResult.isEmpty()) {
+                            Collections.sort(movieSearchResult.entries, new Comparator<MovieSearchResult.Entry>() {
+                                @Override
+                                public int compare(MovieSearchResult.Entry lhs, MovieSearchResult.Entry rhs) {
+                                    return rhs.year.compareTo(lhs.year);
+                                }
+                            });
+                        }
                         return Observable.just(movieSearchResult);
                     }
                 }).

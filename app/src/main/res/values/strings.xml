@@ -4,4 +4,6 @@
     <string name="enter_a_movie_title">Enter a movie title</string>
     <string name="search">Search</string>
     <string name="movie_not_found">Movie not found</string>
+    <string name="loading_movie">Loading movie</string>
+    <string name="fetch_error">Fetch error</string>
 </resources>

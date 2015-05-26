@@ -75,7 +75,7 @@ class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapter.Searc
         TextView yearView;
 
         @InjectView(R.id.row_movie_search_result_type)
-        TextView typeview;
+        TextView typeView;
 
         final ViewHolderClickListener viewHolderClickListener;
 
@@ -89,7 +89,7 @@ class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapter.Searc
         void bind(final MovieSearchResult.Entry movieSearchResultEntry) {
             titleView.setText(movieSearchResultEntry.title);
             yearView.setText(movieSearchResultEntry.year);
-            typeview.setText(movieSearchResultEntry.type);
+            typeView.setText(movieSearchResultEntry.type);
         }
 
         @Override

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/view_movie_details_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/primary">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="left"
+            android:background="@null">
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_weight="0.6"
+                android:layout_height="wrap_content"
+                android:background="@null">
+
+                <TextView
+                    android:layout_alignParentStart="true"
+                    android:id="@+id/view_movie_details_country_with_year"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginBottom="4dp"
+                    />
+
+                <TextView
+                    android:layout_alignParentStart="true"
+                    android:id="@+id/view_movie_details_country_genre"
+                    android:layout_below="@id/view_movie_details_country_with_year"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginBottom="4dp"
+                    />
+
+                <TextView
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/view_movie_details_country_genre"
+                    android:id="@+id/view_movie_details_director"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="8dp"/>
+
+                <TextView
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/view_movie_details_director"
+                    android:id="@+id/view_movie_details_rating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:textSize="48sp"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="8dp"/>
+
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_gravity="right"
+                android:id="@+id/view_movie_details_poster"
+                android:layout_width="0dp"
+                android:maxWidth="150dp"
+                android:layout_weight="0.4"
+                android:layout_height="200dp"
+                android:layout_margin="8dp"
+                android:scaleType="fitXY" />
+
+        </LinearLayout>
+
+        <HorizontalScrollView
+            android:layout_below="@id/view_movie_details_poster"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:scrollbars="none">
+
+            <TextView
+                android:layout_alignParentStart="true"
+                android:id="@+id/view_movie_details_actors"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                />
+
+        </HorizontalScrollView>
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_below="@id/view_movie_details_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        >
+
+        <TextView
+            android:id="@+id/view_movie_details_plot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center" />
+
+    </ScrollView>
+
+</merge>

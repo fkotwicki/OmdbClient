@@ -13,10 +13,14 @@ import javax.inject.Inject;
 import butterknife.InjectView;
 import pl.com.kotwicki.omdbclient.R;
 import pl.com.kotwicki.omdbclient.di.ApplicationComponent;
+import pl.com.kotwicki.omdbclient.model.SearchMovieUseCase;
 import pl.com.kotwicki.omdbclient.rest.MoviesService;
 import pl.com.kotwicki.omdbclient.rest.model.MovieSearchResult;
 import pl.com.kotwicki.omdbclient.ui.BaseFragment;
+import pl.com.kotwicki.omdbclient.ui.LcePresenter;
+import pl.com.kotwicki.omdbclient.ui.LcePresenterImpl;
 import pl.com.kotwicki.omdbclient.ui.LceView;
+import pl.com.kotwicki.omdbclient.ui.movie.MovieActivity;
 import pl.com.kotwicki.omdbclient.ui.search.event.ToggleProgressIndicatorEvent;
 
 /**
@@ -38,13 +42,13 @@ public class SearchFragment extends BaseFragment implements SearchForm.Listener,
 
     private SearchResultAdapter searchResultAdapter;
 
-    private SearchPresenter presenter;
+    private LcePresenter presenter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         searchResultAdapter = new SearchResultAdapter(getActivity(), this);
-        presenter = new SearchPresenterImpl(this);
+        presenter = new LcePresenterImpl<>(this);
     }
 
     @Override
@@ -83,7 +87,7 @@ public class SearchFragment extends BaseFragment implements SearchForm.Listener,
 
     @Override
     public void showError(Throwable e) {
-        showShortToast("Fetch error");
+        showShortToast(getString(R.string.fetch_error));
     }
 
     @Override
@@ -97,12 +101,13 @@ public class SearchFragment extends BaseFragment implements SearchForm.Listener,
 
     @Override
     public void onRequestSearch(String searchText) {
-        presenter.findMovie(moviesService, searchText);
+        presenter.getContent(new SearchMovieUseCase(moviesService, searchText));
     }
 
     @Override
     public void onMovieSelected(MovieSearchResult.Entry movieSearchResultEntry) {
-
+        // TODO maybe move it to presenter?
+        MovieActivity.start(getActivity(), movieSearchResultEntry.title, movieSearchResultEntry.imdbID);
     }
 
 }
