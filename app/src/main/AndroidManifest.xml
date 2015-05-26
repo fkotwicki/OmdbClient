@@ -7,12 +7,15 @@
         android:icon="@mipmap/ic_launcher" android:theme="@style/AppTheme"
         android:name=".AppController">
 
-        <activity android:name=".ui.search.SearchActivity">
+        <activity android:name=".ui.search.SearchActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".ui.movie.MovieActivity" android:screenOrientation="portrait" />
 
     </application>
 

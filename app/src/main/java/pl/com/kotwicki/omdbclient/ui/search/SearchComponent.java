@@ -2,12 +2,12 @@ package pl.com.kotwicki.omdbclient.ui.search;
 
 import dagger.Component;
 import pl.com.kotwicki.omdbclient.di.ApplicationComponent;
-import pl.com.kotwicki.omdbclient.di.Fragment;
+import pl.com.kotwicki.omdbclient.di.Custom;
 
 /**
  * Created by filipkotwicki on 25/05/15.
  */
-@Fragment
+@Custom
 @Component(dependencies = ApplicationComponent.class)
 public interface SearchComponent {
 
