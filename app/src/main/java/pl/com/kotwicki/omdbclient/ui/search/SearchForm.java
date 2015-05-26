@@ -49,7 +49,7 @@ public class SearchForm extends LinearLayout implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         final String searchText = searchTextView.getText().toString();
-        if(formListener != null) {
+        if (formListener != null) {
             hideKeyboard();
             formListener.onRequestSearch(searchText);
         }

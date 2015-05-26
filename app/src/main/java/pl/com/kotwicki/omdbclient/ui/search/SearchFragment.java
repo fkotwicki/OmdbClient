@@ -2,9 +2,11 @@ package pl.com.kotwicki.omdbclient.ui.search;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.TextView;
+
+import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
 
@@ -14,26 +16,34 @@ import pl.com.kotwicki.omdbclient.di.ApplicationComponent;
 import pl.com.kotwicki.omdbclient.rest.MoviesService;
 import pl.com.kotwicki.omdbclient.rest.model.MovieSearchResult;
 import pl.com.kotwicki.omdbclient.ui.BaseFragment;
+import pl.com.kotwicki.omdbclient.ui.LceView;
+import pl.com.kotwicki.omdbclient.ui.search.event.ToggleProgressIndicatorEvent;
 
 /**
  * Created by filipkotwicki on 25/05/15.
  */
-public class SearchFragment extends BaseFragment implements SearchView, SearchForm.Listener {
+public class SearchFragment extends BaseFragment implements SearchForm.Listener, LceView<MovieSearchResult>, SearchResultAdapter.Listener {
+
+    @InjectView(R.id.fragment_search_list)
+    RecyclerView searchResultView;
+
+    @InjectView(R.id.fragment_search_form)
+    SearchForm searchFormView;
 
     @Inject
     MoviesService moviesService;
 
-    @InjectView(R.id.fragment_search_dummy)
-    TextView dummy;
+    @Inject
+    Bus eventBus;
 
-    @InjectView(R.id.fragment_search_form)
-    SearchForm searchFormView;
+    private SearchResultAdapter searchResultAdapter;
 
     private SearchPresenter presenter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        searchResultAdapter = new SearchResultAdapter(getActivity(), this);
         presenter = new SearchPresenterImpl(this);
     }
 
@@ -52,6 +62,8 @@ public class SearchFragment extends BaseFragment implements SearchView, SearchFo
     @Override
     protected void initView(@NonNull View rootView) {
         searchFormView.setFormListener(this);
+        searchResultView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        searchResultView.setAdapter(searchResultAdapter);
     }
 
     @Override
@@ -60,36 +72,37 @@ public class SearchFragment extends BaseFragment implements SearchView, SearchFo
     }
 
     @Override
-    public void showProgress() {
-
+    public void showLoading() {
+        eventBus.post(new ToggleProgressIndicatorEvent(true));
     }
 
     @Override
-    public void hideProgress() {
-
+    public void hideLoading() {
+        eventBus.post(new ToggleProgressIndicatorEvent(false));
     }
 
     @Override
     public void showError(Throwable e) {
-        Log.e("SearchFragment", "Fetch error", e);
+        showShortToast("Fetch error");
     }
 
     @Override
-    public void showSearchResult(MovieSearchResult result) {
-        if(result.isEmpty()) {
+    public void showContent(MovieSearchResult content) {
+        if (content.isEmpty()) {
             showShortToast(getString(R.string.movie_not_found));
-        } else {
-            final StringBuilder sb = new StringBuilder();
-            for (MovieSearchResult.Entry entry : result.entries) {
-                sb.append(entry.toString() + "\n");
-            }
-            dummy.setText(sb.toString());
         }
+
+        searchResultAdapter.update(content);
     }
 
     @Override
     public void onRequestSearch(String searchText) {
         presenter.findMovie(moviesService, searchText);
+    }
+
+    @Override
+    public void onMovieSelected(MovieSearchResult.Entry movieSearchResultEntry) {
+
     }
 
 }

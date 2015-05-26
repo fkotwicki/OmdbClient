@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import pl.com.kotwicki.omdbclient.di.ApplicationComponent;
+import pl.com.kotwicki.omdbclient.di.ApplicationModule;
 import pl.com.kotwicki.omdbclient.di.DaggerApplicationComponent;
 import pl.com.kotwicki.omdbclient.rest.RestModule;
 
@@ -18,7 +19,7 @@ public class AppController extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        applicationComponent = DaggerApplicationComponent.builder().restModule(new RestModule()).build();
+        applicationComponent = DaggerApplicationComponent.builder().applicationModule(new ApplicationModule(new MainThreadBus())).restModule(new RestModule()).build();
     }
 
     public ApplicationComponent applicationComponent() {

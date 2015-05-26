@@ -6,11 +6,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.Inflater;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import pl.com.kotwicki.omdbclient.R;
 import pl.com.kotwicki.omdbclient.rest.model.MovieSearchResult;
 import pl.com.kotwicki.omdbclient.ui.ViewHolderClickListener;
@@ -18,10 +20,10 @@ import pl.com.kotwicki.omdbclient.ui.ViewHolderClickListener;
 /**
  * Created by filipkotwicki on 25/05/15.
  */
-public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapter.SearchResultViewHolder> implements ViewHolderClickListener {
+class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapter.SearchResultViewHolder> implements ViewHolderClickListener {
 
     public interface Listener {
-        void onSearchResultSelected(MovieSearchResult.Entry movieSearchResultEntry);
+        void onMovieSelected(MovieSearchResult.Entry movieSearchResultEntry);
     }
 
     private final List<MovieSearchResult.Entry> container = new ArrayList<>();
@@ -37,13 +39,15 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
 
     public void update(final MovieSearchResult movieSearchResult) {
         container.clear();
-        container.addAll(movieSearchResult.entries);
+        if (!movieSearchResult.isEmpty()) {
+            container.addAll(movieSearchResult.entries);
+        }
         notifyDataSetChanged();
     }
 
     @Override
     public SearchResultViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        final View itemView = LayoutInflater.from(context).inflate(R.layout.row_search_result, parent, false);
+        final View itemView = LayoutInflater.from(context).inflate(R.layout.row_movie_search_result, parent, false);
         return new SearchResultViewHolder(itemView, this);
     }
 
@@ -59,21 +63,33 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
 
     @Override
     public void onClickViewHolder(int position) {
-        listener.onSearchResultSelected(container.get(position));
+        listener.onMovieSelected(container.get(position));
     }
 
     public static class SearchResultViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        @InjectView(R.id.row_movie_search_result_title)
+        TextView titleView;
+
+        @InjectView(R.id.row_movie_search_result_year)
+        TextView yearView;
+
+        @InjectView(R.id.row_movie_search_result_type)
+        TextView typeview;
 
         final ViewHolderClickListener viewHolderClickListener;
 
         public SearchResultViewHolder(View itemView, ViewHolderClickListener viewHolderClickListener) {
             super(itemView);
+            ButterKnife.inject(this, itemView);
             this.viewHolderClickListener = viewHolderClickListener;
             itemView.setOnClickListener(this);
         }
 
         void bind(final MovieSearchResult.Entry movieSearchResultEntry) {
-
+            titleView.setText(movieSearchResultEntry.title);
+            yearView.setText(movieSearchResultEntry.year);
+            typeview.setText(movieSearchResultEntry.type);
         }
 
         @Override
