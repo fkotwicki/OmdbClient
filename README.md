@@ -1,4 +1,4 @@
-Small project that demonstrates usage of the most popular (and in my opinion - the best) libraries in Android developers community, such as:
+Small project that demonstrates usage of some popular libraries in Android developers community, such as:
 
 - RxJava
 - Retrofit
