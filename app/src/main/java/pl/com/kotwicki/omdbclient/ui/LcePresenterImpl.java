@@ -1,5 +1,7 @@
 package pl.com.kotwicki.omdbclient.ui;
 
+import java.lang.ref.WeakReference;
+
 import pl.com.kotwicki.omdbclient.model.UseCase;
 import rx.Subscriber;
 import rx.Subscription;
@@ -9,29 +11,32 @@ import rx.Subscription;
  */
 public class LcePresenterImpl<CT> implements LcePresenter {
 
-    protected LceView<CT> lceView;
+    protected WeakReference<LceView<CT>> lceViewRef;
 
     protected Subscription contentSubscription;
 
     public LcePresenterImpl(final LceView<CT> lceView) {
-        this.lceView = lceView;
+        this.lceViewRef = new WeakReference<>(lceView);
     }
 
     @Override
     public void getContent(UseCase useCase) {
         unsubscribe();
-        lceView.showLoading();
+        if(lceViewRef.get() != null) {
+            lceViewRef.get().showLoading();
+        }
         contentSubscription = useCase.execute(createContentSubscriber());
     }
 
     @Override
     public void onStop() {
         unsubscribe();
-        lceView = null;
     }
 
     protected void onGotContent(final CT content) {
-        lceView.showContent(content);
+        if(lceViewRef.get() != null) {
+            lceViewRef.get().showContent(content);
+        }
     }
 
     private void unsubscribe() {
@@ -45,13 +50,18 @@ public class LcePresenterImpl<CT> implements LcePresenter {
         return new Subscriber<CT>() {
             @Override
             public void onCompleted() {
-                lceView.hideLoading();
+                if(lceViewRef.get()!= null) {
+                    lceViewRef.get().hideLoading();
+                }
             }
 
             @Override
             public void onError(Throwable e) {
-                lceView.hideLoading();
-                lceView.showError(e);
+                final LceView view = lceViewRef.get();
+                if(view != null) {
+                    view.hideLoading();
+                    view.showError(e);
+                }
             }
 
             @Override
@@ -60,4 +70,6 @@ public class LcePresenterImpl<CT> implements LcePresenter {
             }
         };
     }
+
+
 }
